@@ -1,15 +1,15 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import { HomePage } from "./pages/Home";
+import Header from "./components/Header";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" width={200} />
-      </header>
-      <HomePage />
+    <div className="bg-gray-50 min-h-screen">
+      <Header />
+      <main className="p-4">
+        <HomePage />
+      </main>
     </div>
   );
 }
