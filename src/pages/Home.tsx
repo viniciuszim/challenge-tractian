@@ -13,17 +13,9 @@ import {
   fetchCompanies,
   fetchLocations,
   Location,
-  SensorType,
-  StatusType,
 } from "../services/api";
-import {
-  buildTree,
-  filterTree,
-  findFirstComponent,
-  TreeNode,
-} from "../utils/treeUtils";
+import { buildTree, filterTree, findFirstComponent } from "../utils/treeUtils";
 import AssetDetail from "../components/AssetDetail";
-import assetImage from "../assets/image223.png";
 
 export const HomePage: React.FC = () => {
   const companyId = "662fd0ee639069143a8fc387";

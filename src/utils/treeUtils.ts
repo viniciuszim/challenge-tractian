@@ -1,4 +1,4 @@
-import { Asset, AssetType, SensorType, StatusType } from "../services/api";
+import { Asset, AssetType } from "../services/api";
 
 export interface TreeNode extends Asset {
   type: AssetType;

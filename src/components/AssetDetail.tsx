@@ -1,7 +1,5 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircle as successStatus } from "@fortawesome/free-solid-svg-icons";
-import { Asset, AssetType, StatusType } from "../services/api";
+import { Asset, AssetType } from "../services/api";
 
 import assetImage from "../assets/image223.png";
 import sensorIcon from "../assets/Sensor.svg";
