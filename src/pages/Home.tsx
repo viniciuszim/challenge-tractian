@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBoltLightning as energyIcon } from "@fortawesome/free-solid-svg-icons";
 import { faCircleExclamation as criticalIcon } from "@fortawesome/free-solid-svg-icons";
+import { faSearch as searchIcon } from "@fortawesome/free-solid-svg-icons";
 
 import { TreeView } from "../components/TreeView";
 import Breadcrumbs from "../components/Breadcrumbs";
@@ -60,12 +61,26 @@ export const HomePage: React.FC = () => {
           Crítico
         </button>
       </Breadcrumbs>
-      <input
-        type="text"
-        placeholder="Search..."
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <TreeView nodes={filteredTree} />
+
+      {/* Left Container */}
+      <div className="w-full sm:w-[479px] rounded-[2px] border-[1px] border-solid border-Shape-Border-card bg-white">
+        <div className="relative w-full">
+          <input
+            type="text"
+            placeholder="Buscar Ativo ou Local"
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full h-[45px] px-3 py-[1px] rounded-[2px] border border-Shape-Border-card bg-white"
+          />
+          <FontAwesomeIcon
+            icon={searchIcon}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+            style={{ fontSize: "16px" }}
+          />
+        </div>
+        <div className="pt-2 pr-1 pb-2 pl-1 gap-1">
+          <TreeView nodes={filteredTree} />
+        </div>
+      </div>
     </div>
   );
 };
