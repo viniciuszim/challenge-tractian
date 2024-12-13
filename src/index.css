@@ -33,8 +33,19 @@ code {
   @apply text-xl font-semibold leading-[28px];
 }
 
+.typography-heading-lg {
+  @apply text-lg font-semibold leading-[28px];
+}
+
+.typography-body-md {
+  @apply text-sm font-normal leading-[16px];
+}
+
 .typography-body-sm {
   @apply text-sm font-normal leading-[20px];
 }
 
+.typography-body-bold-sm {
+  @apply text-sm font-semibold leading-[16px];
+}
 

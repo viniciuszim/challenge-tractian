@@ -16,15 +16,22 @@ export interface Location {
   parentId?: string;
 }
 
+export enum StatusType {
+  Alert = "alert",
+  Operating = "operating",
+}
+
 export interface Asset {
   id: string;
   name: string;
+  description: string;
   parentId?: string;
   sensorId?: string;
   sensorType?: string;
-  status?: string;
+  status?: StatusType;
   gatewayId?: string;
   locationId?: string;
+  image?: string;
 }
 
 export const fetchCompanies = async (): Promise<Company[]> => {
