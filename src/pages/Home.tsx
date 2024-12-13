@@ -13,9 +13,15 @@ import {
   fetchCompanies,
   fetchLocations,
   Location,
+  SensorType,
   StatusType,
 } from "../services/api";
-import { buildTree, filterTree } from "../utils/treeUtils";
+import {
+  buildTree,
+  filterTree,
+  findFirstComponent,
+  TreeNode,
+} from "../utils/treeUtils";
 import AssetDetail from "../components/AssetDetail";
 import assetImage from "../assets/image223.png";
 
@@ -24,6 +30,8 @@ export const HomePage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [locations, setLocations] = useState<Location[] | null>(null);
   const [assets, setAssets] = useState<Asset[] | null>(null);
+
+  const [assetSelected, setAssetSelected] = useState<Asset | null>(null);
 
   useEffect(() => {
     const fetchLocationData = async () => {
@@ -45,15 +53,15 @@ export const HomePage: React.FC = () => {
   const tree = buildTree(locations || [], assets || []);
   const filteredTree = filterTree(tree, searchQuery);
 
-  const assetMOCK: Asset = {
-    id: "id",
-    name: "MOTOR RT COAL AF01",
-    description: "Motor Elétrico (Trifásico)",
-    sensorId: "HIO4510",
-    sensorType: "Elétrica",
-    status: StatusType.Operating,
-    gatewayId: "EUH4R27",
-    image: assetImage,
+  useEffect(() => {
+    if (!assetSelected) {
+      const firstComponent = findFirstComponent(tree);
+      setAssetSelected(firstComponent);
+    }
+  }, [assetSelected, tree]);
+
+  const handleAssetClick = (node: Asset) => {
+    setAssetSelected(node);
   };
 
   return (
@@ -94,13 +102,22 @@ export const HomePage: React.FC = () => {
             />
           </div>
           <div className="pt-2 pr-1 pb-2 pl-1 gap-1">
-            <TreeView nodes={filteredTree} />
+            <TreeView
+              nodes={filteredTree}
+              selected={assetSelected?.id}
+              onClickAction={handleAssetClick}
+            />
           </div>
         </div>
 
         {/* Right Container */}
         <div className="flex-1 rounded-[2px] border-[1px] border-solid border-Shape-Border-card bg-white">
-          <AssetDetail {...assetMOCK} />
+          {assetSelected && <AssetDetail {...assetSelected} />}
+          {!assetSelected && (
+            <div className="flex h-full items-center text-center">
+              <h1 className="w-full">Loading...</h1>
+            </div>
+          )}
         </div>
       </div>
     </div>

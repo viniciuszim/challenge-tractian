@@ -16,18 +16,28 @@ export interface Location {
   parentId?: string;
 }
 
+export enum AssetType {
+  Location = "location",
+  Asset = "asset",
+  Component = "component",
+}
+
+export enum SensorType {
+  Energy = "energy",
+  Vibration = "vibration",
+}
+
 export enum StatusType {
   Alert = "alert",
   Operating = "operating",
 }
-
 export interface Asset {
   id: string;
   name: string;
   description: string;
   parentId?: string;
   sensorId?: string;
-  sensorType?: string;
+  sensorType?: SensorType;
   status?: StatusType;
   gatewayId?: string;
   locationId?: string;

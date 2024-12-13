@@ -1,7 +1,7 @@
-interface TreeNode {
-  id: string;
-  name: string;
-  type: "location" | "asset" | "component";
+import { Asset, AssetType, SensorType, StatusType } from "../services/api";
+
+export interface TreeNode extends Asset {
+  type: AssetType;
   children: TreeNode[];
 }
 
@@ -16,9 +16,8 @@ export const buildTree = (locations: any[], assets: any[]): TreeNode[] => {
       existingNode.name = loc.name;
     } else {
       locationMap.set(loc.id, {
-        id: loc.id,
-        name: loc.name,
-        type: "location",
+        ...loc,
+        type: AssetType.Location,
         children: [],
       });
     }
@@ -28,9 +27,9 @@ export const buildTree = (locations: any[], assets: any[]): TreeNode[] => {
     if (loc.parentId) {
       if (!locationMap.has(loc.parentId)) {
         locationMap.set(loc.parentId, {
-          id: loc.parentId,
+          ...loc,
           name: "", // Placeholder
-          type: "location",
+          type: AssetType.Location,
           children: [],
         });
       }
@@ -46,9 +45,8 @@ export const buildTree = (locations: any[], assets: any[]): TreeNode[] => {
   assets.forEach((asset) => {
     if (!assetMap.has(asset.id)) {
       assetMap.set(asset.id, {
-        id: asset.id,
-        name: asset.name,
-        type: asset.sensorType ? "component" : "asset",
+        ...asset,
+        type: asset.sensorType ? AssetType.Component : AssetType.Asset,
         children: [],
       });
     }
@@ -60,9 +58,10 @@ export const buildTree = (locations: any[], assets: any[]): TreeNode[] => {
     if (asset.locationId) {
       if (!locationMap.has(asset.locationId)) {
         locationMap.set(asset.locationId, {
+          ...asset,
           id: asset.locationId,
           name: "", // Placeholder
-          type: "location",
+          type: AssetType.Location,
           children: [],
         });
       }
@@ -73,9 +72,10 @@ export const buildTree = (locations: any[], assets: any[]): TreeNode[] => {
     } else if (asset.parentId) {
       if (!assetMap.has(asset.parentId)) {
         assetMap.set(asset.parentId, {
+          ...asset,
           id: asset.parentId,
           name: "", // Placeholder
-          type: "asset",
+          type: AssetType.Asset,
           children: [],
         });
       }
@@ -102,4 +102,21 @@ export const filterTree = (tree: TreeNode[], query: string): TreeNode[] => {
         node.name.toLowerCase().includes(query.toLowerCase()) ||
         node.children?.length
     );
+};
+
+export const findFirstComponent = (tree: TreeNode[]): TreeNode | null => {
+  for (const node of tree) {
+    if (node.type === AssetType.Component) {
+      return node;
+    }
+
+    if (node.children) {
+      const found = findFirstComponent(node.children);
+      if (found) {
+        return found;
+      }
+    }
+  }
+
+  return null;
 };
