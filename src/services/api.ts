@@ -38,7 +38,7 @@ export const fetchCompanies = async (): Promise<Company[]> => {
 };
 
 export const fetchLocations = async (
-  companyId: number
+  companyId: string
 ): Promise<Location[]> => {
   try {
     const response = await api.get<Location[]>(
@@ -51,7 +51,7 @@ export const fetchLocations = async (
   }
 };
 
-export const fetchAssets = async (companyId: number): Promise<Asset[]> => {
+export const fetchAssets = async (companyId: string): Promise<Asset[]> => {
   try {
     const response = await api.get<Asset[]>(`/companies/${companyId}/assets`);
     return response.data;
