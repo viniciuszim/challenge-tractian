@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="bg-gray-50 min-h-screen">
       <Header />
-      <main className="p-4">
+      <main className="p-[8px]">
         <HomePage />
       </main>
     </div>
