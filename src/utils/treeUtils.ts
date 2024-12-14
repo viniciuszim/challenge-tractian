@@ -1,4 +1,4 @@
-import { Asset, AssetType } from "../services/api";
+import { Asset, AssetType, SensorType } from "../services/api";
 
 export interface TreeNode extends Asset {
   type: AssetType;
@@ -91,17 +91,27 @@ export const buildTree = (locations: any[], assets: any[]): TreeNode[] => {
   return tree;
 };
 
-export const filterTree = (tree: TreeNode[], query: string): TreeNode[] => {
+export const filterTree = (
+  tree: TreeNode[],
+  query: string,
+  sensorType: SensorType | null
+): TreeNode[] => {
   return tree
     .map((node) => ({
       ...node,
-      children: node.children ? filterTree(node.children, query) : [],
+      children: node.children
+        ? filterTree(node.children, query, sensorType)
+        : [],
     }))
-    .filter(
-      (node) =>
-        node.name.toLowerCase().includes(query.toLowerCase()) ||
-        node.children?.length
-    );
+    .filter((node) => {
+      const matchesQuery = node.name
+        .toLowerCase()
+        .includes(query.toLowerCase());
+      const matchesSensorType = !sensorType || node.sensorType === sensorType;
+      const hasChildren = node.children?.length > 0;
+
+      return (matchesQuery && matchesSensorType) || hasChildren;
+    });
 };
 
 export const findFirstComponent = (tree: TreeNode[]): TreeNode | null => {

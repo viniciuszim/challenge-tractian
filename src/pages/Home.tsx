@@ -7,7 +7,13 @@ import { faSearch as searchIcon } from "@fortawesome/free-solid-svg-icons";
 
 import { TreeView } from "../components/TreeView";
 import Breadcrumbs from "../components/Breadcrumbs";
-import { Asset, fetchAssets, fetchLocations, Location } from "../services/api";
+import {
+  Asset,
+  fetchAssets,
+  fetchLocations,
+  Location,
+  SensorType,
+} from "../services/api";
 import { buildTree, filterTree, findFirstComponent } from "../utils/treeUtils";
 import AssetDetail from "../components/AssetDetail";
 import { useCompany } from "../hooks/useCompanies";
@@ -16,13 +22,16 @@ export const HomePage: React.FC = () => {
   const { companySelected } = useCompany();
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [sensorTypeQuery, setSensorTypeQuery] = useState<SensorType | null>(
+    null
+  );
   const [locations, setLocations] = useState<Location[] | null>(null);
   const [assets, setAssets] = useState<Asset[] | null>(null);
 
   const [assetSelected, setAssetSelected] = useState<Asset | null>(null);
 
   const tree = buildTree(locations || [], assets || []);
-  const filteredTree = filterTree(tree, searchQuery);
+  const filteredTree = filterTree(tree, searchQuery, sensorTypeQuery);
 
   useEffect(() => {
     const fetchLocationData = async (companyId: string) => {
@@ -35,6 +44,7 @@ export const HomePage: React.FC = () => {
       setAssets(data);
 
       setAssetSelected(null);
+      setSensorTypeQuery(null);
     };
 
     if (companySelected) {
@@ -54,10 +64,25 @@ export const HomePage: React.FC = () => {
     setAssetSelected(node);
   };
 
+  const handleSensorTypeFilterClick = (sensorType: SensorType) => {
+    if (sensorTypeQuery !== sensorType) {
+      setSensorTypeQuery(sensorType);
+    } else {
+      setSensorTypeQuery(null);
+    }
+  };
+
   return (
     <div className="flex flex-col p-[16px] gap-[12px] rounded-[4px] border-[1px] border-solid border-Shape-Border-card bg-white">
       <Breadcrumbs title="Ativos" subTitle={`${companySelected?.name} Unit`}>
-        <button className="button-tertiary h-[32px]">
+        <button
+          className={`button-tertiary h-[32px] ${
+            sensorTypeQuery === SensorType.Energy && "is-active"
+          }`}
+          onClick={() => {
+            handleSensorTypeFilterClick(SensorType.Energy);
+          }}
+        >
           <FontAwesomeIcon
             icon={energyIcon}
             className="h-[14px] w-[14px] mr-2 text-blue-500"
@@ -65,7 +90,14 @@ export const HomePage: React.FC = () => {
           Sensor de Energia
         </button>
 
-        <button className="button-tertiary h-[32px]">
+        <button
+          className={`button-tertiary h-[32px] ${
+            sensorTypeQuery === SensorType.Vibration && "is-active"
+          }`}
+          onClick={() => {
+            handleSensorTypeFilterClick(SensorType.Vibration);
+          }}
+        >
           <FontAwesomeIcon
             icon={criticalIcon}
             className="h-[14px] w-[14px] mr-2 text-blue-500"

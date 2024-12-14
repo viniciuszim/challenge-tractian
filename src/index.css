@@ -27,6 +27,13 @@ code {
 .button-tertiary {
   @layer font-medium;
   @apply px-[14px] py-[6px] rounded-[3px] border border-Neutral-Colors-Gray-200 bg-Neutral-Colors-White text-sm leading-[20px] text-center;
+
+  /* Hover state */
+  @apply hover:bg-Neutral-Colors-Gray-50 hover:border-Neutral-Colors-Gray-300 hover:text-Neutral-Colors-Gray-900;
+
+}
+.button-tertiary.is-active {
+  @apply bg-blue-100 border-blue-500 text-blue-500;
 }
 
 .typography-heading-xl {
