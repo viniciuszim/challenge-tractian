@@ -6,7 +6,7 @@ const api = axios.create({
 });
 
 export interface Company {
-  id: number;
+  id: string;
   name: string;
 }
 

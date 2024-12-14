@@ -7,43 +7,39 @@ import { faSearch as searchIcon } from "@fortawesome/free-solid-svg-icons";
 
 import { TreeView } from "../components/TreeView";
 import Breadcrumbs from "../components/Breadcrumbs";
-import {
-  Asset,
-  fetchAssets,
-  fetchCompanies,
-  fetchLocations,
-  Location,
-} from "../services/api";
+import { Asset, fetchAssets, fetchLocations, Location } from "../services/api";
 import { buildTree, filterTree, findFirstComponent } from "../utils/treeUtils";
 import AssetDetail from "../components/AssetDetail";
+import { useCompany } from "../hooks/useCompanies";
 
 export const HomePage: React.FC = () => {
-  const companyId = "662fd0ee639069143a8fc387";
+  const { companySelected } = useCompany();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [locations, setLocations] = useState<Location[] | null>(null);
   const [assets, setAssets] = useState<Asset[] | null>(null);
 
   const [assetSelected, setAssetSelected] = useState<Asset | null>(null);
 
+  const tree = buildTree(locations || [], assets || []);
+  const filteredTree = filterTree(tree, searchQuery);
+
   useEffect(() => {
-    const fetchLocationData = async () => {
+    const fetchLocationData = async (companyId: string) => {
       const data = await fetchLocations(companyId);
-      console.log("=== fetchLocations: ", data);
       setLocations(data);
     };
 
-    const fetchAssetData = async () => {
+    const fetchAssetData = async (companyId: string) => {
       const data = await fetchAssets(companyId);
-      console.log("=== fetchAssetData: ", data);
       setAssets(data);
     };
 
-    fetchLocationData();
-    fetchAssetData();
-  }, [companyId]);
-
-  const tree = buildTree(locations || [], assets || []);
-  const filteredTree = filterTree(tree, searchQuery);
+    if (companySelected) {
+      fetchLocationData(companySelected.id);
+      fetchAssetData(companySelected.id);
+    }
+  }, [companySelected]);
 
   useEffect(() => {
     if (!assetSelected) {
@@ -52,13 +48,18 @@ export const HomePage: React.FC = () => {
     }
   }, [assetSelected, tree]);
 
+  // const selectFirstElement = useCallback(() => {
+  //   const firstComponent = findFirstComponent(tree);
+  //   setAssetSelected(firstComponent);
+  // }, [tree, setAssetSelected])
+
   const handleAssetClick = (node: Asset) => {
     setAssetSelected(node);
   };
 
   return (
     <div className="flex flex-col p-[16px] gap-[12px] rounded-[4px] border-[1px] border-solid border-Shape-Border-card bg-white">
-      <Breadcrumbs title="Ativos" subTitle="Apex Unit">
+      <Breadcrumbs title="Ativos" subTitle={`${companySelected?.name} Unit`}>
         <button className="button-tertiary h-[32px]">
           <FontAwesomeIcon
             icon={energyIcon}
