@@ -24,7 +24,7 @@ const AssetDetail = ({
       <p className="typography-body-bold-sm text-Neutral-Colors-Gray-950">
         {label}
       </p>
-      <p className="typography-body-md text-Neutral-Colors-Gray-500 flex items-center">
+      <div className="flex flex-row">
         {avatar && (
           <div className="w-6 h-6 bg-blue-500 text-white flex items-center justify-center rounded-full text-sm font-bold mr-2">
             {text?.substring(0, 1).toUpperCase()}
@@ -33,8 +33,10 @@ const AssetDetail = ({
         {icon && (
           <img src={icon} alt="custom icon" width={20} className="mr-2" />
         )}
-        {text}
-      </p>
+        <p className="typography-body-md text-Neutral-Colors-Gray-500 flex items-center">
+          {text}
+        </p>
+      </div>
     </div>
   );
 

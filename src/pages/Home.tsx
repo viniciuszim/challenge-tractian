@@ -33,6 +33,8 @@ export const HomePage: React.FC = () => {
     const fetchAssetData = async (companyId: string) => {
       const data = await fetchAssets(companyId);
       setAssets(data);
+
+      setAssetSelected(null);
     };
 
     if (companySelected) {
@@ -47,11 +49,6 @@ export const HomePage: React.FC = () => {
       setAssetSelected(firstComponent);
     }
   }, [assetSelected, tree]);
-
-  // const selectFirstElement = useCallback(() => {
-  //   const firstComponent = findFirstComponent(tree);
-  //   setAssetSelected(firstComponent);
-  // }, [tree, setAssetSelected])
 
   const handleAssetClick = (node: Asset) => {
     setAssetSelected(node);

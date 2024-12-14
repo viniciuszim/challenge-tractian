@@ -17,6 +17,7 @@ const Header = () => {
           companies.length &&
           companies.map((company) => (
             <button
+              key={`company-button-${company.id}`}
               className={`w-full sm:w-auto ${
                 company.id === companySelected?.id
                   ? "button-active"
