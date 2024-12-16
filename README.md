@@ -1,46 +1,234 @@
-# Getting Started with Create React App
+# Front End Software Engineer
+### Context
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Assets are essential to the operation of the industry, it can include everything from manufacturing equipment to transportation vehicles to power generation systems. Proper management and maintenance is crucial to ensure that they continue to operate efficiently and effectively. A practical way to visualize the hierarchy of assets is through a tree structure.
 
-## Available Scripts
+### Challenge
 
-In the project directory, you can run:
+> 📌  **Build an Tree View Application that shows companies Assets** 
+*(The tree is basically composed with components, assets and locations)*
 
-### `npm start`
+**Components**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Components are the parts that constitute an asset.
+- Components are typically associated with an asset, but the customer **may** want to add components without an asset as a parent **or** with a location as a parent
+- Components typically include **vibration** or **energy** sensors, and they have a **operating** or **alert** status
+- On the tree, components are represented by this icon:
+![component](../assets/component.png)
+    
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+**Assets/Sub-Assets**
 
-### `npm test`
+- Assets have a set of components
+- Some assets are very large, like a conveyor belt and they **may** contain N sub-assets.
+- Assets are typically associated with a location, but the customer **may** want to add assets without specifying a location as a parent.
+- You can know that an item is a **asset**, if they have another assets or components as children.
+- On the tree, assets are represented by this icon:
+![asset](../assets/asset.png)
+    
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Locations/Sub-Locations**
 
-### `npm run build`
+- Locations represent the places where the assets are located. For very large locations, the customer may want to split them to keep their hierarchy more organized. Therefore, locations may contain N sub-locations.
+- On the tree, locations are represented by this icon:
+![location](../assets/location.png)
+    
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+In summary, a tree may like look this:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+- Root
+  |
+  └── Location A
+  |     |
+  |     ├── Asset 1
+  |     |     ├── Component A1
+  |     |     ├── Component A2
+  |     |
+  |     ├── Asset 2
+  |           ├── Component B1
+  |           ├── Component B2
+  |
+  ├── Location B
+  |     ├── Location C
+  |     |     |
+  |     |     ├── Asset 3
+  |     |     |     ├── Component C1
+  |     |     |     ├── Component C2
+  |     |     |
+  |     |     ├── Component D1
+  |
+  └── Component X
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Features
 
-### `npm run eject`
+**Asset Page**
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- The Asset Tree is the core feature, offering a visual Tree representation of the company's asset hierarchy.
+- **Sub-Features:**
+    1. **Visualization**
+        - Present a dynamic tree structure displaying components, assets, and locations.
+    2. **Filters**
+        
+        **Text Search**
+        
+        - Users can search for specific components/assets/locations within the asset hierarchy.
+        
+        **Energy Sensors**
+        
+        - Implement a filter to isolate energy sensors within the tree.
+        
+        **Critical Sensor Status**
+        
+        - Integrate a filter to identify assets with critical sensor status.
+    - When the filters are applied, the asset parents **can't** be hidden. The user must know the entire asset path. The items that are not related to the asset path, must be hidden
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Technical Data
+You have Assets and Locations, you need to relate both of them to build the Tree.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+**Locations Collection**
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Contains only Locations and sub locations (Composed with name, id and a optional parentId)
+```json
+{
+  "id": "65674204664c41001e91ecb4",
+  "name": "PRODUCTION AREA - RAW MATERIAL",
+  "parentId": null
+}
+```
 
-## Learn More
+If the Location has a parentId, it means it is a sub location
+```json
+{
+  "id": "656a07b3f2d4a1001e2144bf",
+  "name": "CHARCOAL STORAGE SECTOR",
+  "parentId": "65674204664c41001e91ecb4"
+}
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The visual representation:
+```
+- PRODUCTION AREA - RAW MATERIAL
+  |
+  ├── CHARCOAL STORAGE SECTOR
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    
+**Assets Collection**
+
+Contains assets, sub assets and components (Composed by name, id and a optional locationId, parentId and sensorType)
+
+If the item has a sensorType, it means it is a component. If it does not have a location or a parentId, it means he is unliked from any asset or location in the tree.
+```json
+{
+  "id": "656734821f4664001f296973",
+  "name": "Fan - External",
+  "parentId": null,
+  "sensorId": "MTC052",
+  "sensorType": "energy",
+  "status": "operating",
+  "gatewayId": "QHI640",
+  "locationId": null
+}
+```
+
+If the item has a location and does not have a sensorId, it means he is an asset with a location as parent, from the location collection
+```json
+{
+  "id": "656a07bbf2d4a1001e2144c2",
+  "name": "CONVEYOR BELT ASSEMBLY",
+  "locationId": "656a07b3f2d4a1001e2144bf"
+}
+```
+
+If the item has a parentId and does not have a sensorId, it means he is an asset with another asset as a parent
+```json
+{
+  "id": "656a07c3f2d4a1001e2144c5",
+  "name": "MOTOR TC01 COAL UNLOADING AF02",
+  "parentId": "656a07bbf2d4a1001e2144c2"
+}
+```
+
+If the item has a sensorType, it means it is a component. If it does have a location or a parentId, it means he has an asset or Location as parent    
+```json
+{
+  "id": "656a07cdc50ec9001e84167b",
+  "name": "MOTOR RT COAL AF01",
+  "parentId": "656a07c3f2d4a1001e2144c5",
+  "sensorId": "FIJ309",
+  "sensorType": "vibration",
+  "status": "operating",
+  "gatewayId": "FRH546"
+}
+```
+        
+To summarize, this is the visual representation of this items on the Tree
+```
+- ROOT
+  |
+  ├── PRODUCTION AREA - RAW MATERIAL [Location]
+  |     |
+  |     ├── CHARCOAL STORAGE SECTOR [Sub-Location]
+  |     |     |
+  |     |     ├── CONVEYOR BELT ASSEMBLY [Asset]
+  |     |     |     |
+  |     |     |     ├── MOTOR TC01 COAL UNLOADING AF02 [Sub-Asset]
+  |     |     |     |     |
+  |     |     |     |     ├── MOTOR RT COAL AF01 [Component - Vibration]
+  |
+  ├── Fan - External [Component - Vibration]
+```
+
+### Design
+[Figma Link](https://www.figma.com/file/F52Yv8RmGoGOYcV9CiuIZ1/%5BCareers%5D-Frontend-Challenge-v2?type=design&node-id=0-1&mode=design&t=r3n2A4W0ZFUwVjAs-0)
+
+> 💡 You don't have to exactly match figma's design! Please, be able to abstract well the presented problem and define it yourself what you consider most important and think with the user's head!
+
+### Demo API
+The API only works for GET requests, there are 3 endpoints:
+
+- `/companies` - Returns all companies
+- `/companies/:companyId/locations` - Returns all locations of the company
+- `/companies/:companyId/assets` - Returns all assets of the company
+
+API: [fake-api.tractian.com](fake-api.tractian.com)
+
+### In the README
+- Include a video demonstrating the application opening for each company and selecting a filter.
+- Describe which points of the project you would improve if you had more time.
+
+### Extra
+You may use libraries for anything you find essential, **except** for the Asset Tree and the UI.
+In this challenge, performance and usability count as **bonus** points.
+
+## Prerequisites
+
+- [Volta](https://docs.volta.sh) for NodeJs and Yarn version management.
+- [TypeScript](https://github.com/microsoft/TypeScript)
+- [Jest](https://github.com/facebook/jest)
+
+## Setup
+
+1. Install [Volta](https://docs.volta.sh).
+   - Follow the [official
+     instructions](https://docs.volta.sh/guide/getting-started).
+   - Volta will install the versions of Nodejs and Yarn specified in
+     the `package.json` _for this project only_.
+   - That means everyone on this project will use the same versions
+     but you can still use other versions in other projects
+     _automatically_!
+2. Install packages:
+
+```bash
+npm install
+```
+
+## Usage
+
+Run the following command to start the project:
+
+```bash
+npm start
+```
