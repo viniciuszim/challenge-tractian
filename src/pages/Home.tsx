@@ -109,7 +109,7 @@ export const HomePage: React.FC = () => {
       {/* Main Container */}
       <div className="flex flex-col lg:flex-row gap-[8px]">
         {/* Left Container */}
-        <div className="w-full lg:w-[479px] rounded-[2px] border-[1px] border-solid border-Shape-Border-card bg-white">
+        <div className="w-full h-[364px] sm:h-[764px] lg:w-[479px] overflow-y-auto rounded-[2px] border-[1px] border-solid border-Shape-Border-card bg-white">
           <div className="relative w-full">
             <input
               type="text"
