@@ -32,15 +32,6 @@ const Header = () => {
               {`${company.name} Unit`}
             </button>
           ))}
-
-        {/* <button className="button-inactive w-full sm:w-auto">
-          <FontAwesomeIcon icon={unitIcon} className="h-[14px] w-[14px] mr-2" />{" "}
-          Tobias Unit
-        </button>
-        <button className="button-inactive w-full sm:w-auto">
-          <FontAwesomeIcon icon={unitIcon} className="h-[14px] w-[14px] mr-2" />{" "}
-          Jaguar Unit
-        </button> */}
       </div>
     </header>
   );

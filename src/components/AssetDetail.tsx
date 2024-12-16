@@ -26,7 +26,10 @@ const AssetDetail = ({
       </p>
       <div className="flex flex-row">
         {avatar && (
-          <div className="w-6 h-6 bg-blue-500 text-white flex items-center justify-center rounded-full text-sm font-bold mr-2">
+          <div
+            data-testid="asset-detail-avatar"
+            className="w-6 h-6 bg-blue-500 text-white flex items-center justify-center rounded-full text-sm font-bold mr-2"
+          >
             {text?.substring(0, 1).toUpperCase()}
           </div>
         )}

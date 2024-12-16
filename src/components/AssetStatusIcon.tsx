@@ -15,6 +15,7 @@ const AssetStatusIcon = ({
     <>
       {type === "component" && sensorType === "energy" && (
         <FontAwesomeIcon
+          data-testid="icon"
           icon={energyIcon}
           className={`ml-1 ${
             status === "operating" ? "text-success" : "text-error"
@@ -24,6 +25,7 @@ const AssetStatusIcon = ({
       )}
       {type === "component" && sensorType === "vibration" && (
         <FontAwesomeIcon
+          data-testid="icon"
           icon={successStatus}
           className={`ml-1 ${
             status === "operating" ? "text-success" : "text-error"
